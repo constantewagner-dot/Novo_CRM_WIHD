@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WIHD · Sua viagem</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#e6eaf1;font:16px/1.6 'Source Sans 3',sans-serif;color:#1b2433;display:grid;place-items:center;min-height:100vh;padding:16px}
+.c{background:#fff;border-top:6px solid #c9a13b;border-radius:10px;max-width:460px;width:100%;padding:24px}
+h1{font-family:'Bebas Neue';font-weight:400;font-size:2.4rem;color:#17304f;margin:0;letter-spacing:.04em}
+.s{color:#8a6234;margin-bottom:14px}dl{display:grid;grid-template-columns:120px 1fr;gap:6px 10px}dt{color:#66728a}dd{margin:0;font-weight:700}
+</style></head><body>
+<div class="c"><h1>WIHD Milhas &amp; Viagens</h1><div class="s">Detalhes da sua viagem</div><div id="o">Carregando…</div></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const e=s=>String(s??'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const d=x=>x?new Date(x+'T00:00:00').toLocaleDateString('pt-BR'):'—';
+(async()=>{
+  const t=new URLSearchParams(location.search).get('t');
+  const {data}=await supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY).rpc('portal_viagem',{token:t});
+  document.getElementById('o').innerHTML=!data?'Link inválido ou expirado. Fale com a sua agência.':
+  `<dl><dt>Passageiro</dt><dd>${e(data.cliente)}</dd><dt>Serviço</dt><dd>${e(data.tipo)}</dd><dt>Destino</dt><dd>${e(data.destino)}</dd><dt>Fornecedor</dt><dd>${e(data.fornecedor)}</dd><dt>Localizador</dt><dd>${e(data.localizador)}</dd><dt>Ida</dt><dd>${d(data.data_ida)}</dd><dt>Volta</dt><dd>${d(data.data_volta)}</dd><dt>Status</dt><dd>${e(data.status)}</dd></dl><p>${e(data.notas==null?'':data.notas)}</p>`;
+})();
+</script></body></html>

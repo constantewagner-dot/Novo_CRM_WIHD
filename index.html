@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("wihd_tema")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){}</script>
+<title>WIHD Milhas e Viagens · CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#17304f;--navy2:#1f3d63;--gold:#c9a13b;--brown:#8a6234;--bg:#e6eaf1;--card:#fff;--tx:#1b2433;--mut:#66728a;--ok:#2e7d5b;--bad:#b3392f;--ln:#d5dbe6;--head:#17304f;--btn:#17304f;--soft:#f6f8fb;--soft2:#eef1f7;--warm:#f3ecd9;--chat:#efe9dc;--bout:#dcecd2;--badbg:#f6d5d1;--inp:#fff}
+:root[data-theme=dark]{--navy:#0d1c30;--navy2:#16304f;--bg:#0a1626;--card:#122238;--tx:#e6ebf3;--mut:#9aa8bf;--ok:#3ecf8e;--bad:#ff7b7b;--ln:#233a58;--head:#e6ebf3;--btn:#2b4c78;--soft:#16293f;--soft2:#1b3350;--warm:#3a3321;--chat:#0e1c2e;--bout:#1f4a3a;--badbg:#4a2323;--inp:#0f1f33;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 'Source Sans 3',sans-serif;background:var(--bg);color:var(--tx)}
+h1,h2,h3{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.04em;margin:0}
+button,input,select,textarea{font:inherit}:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.hide{display:none!important}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.lbox{--w:min(440px,92vw);width:var(--w);aspect-ratio:1;box-sizing:border-box;background:var(--card);border:2px solid var(--gold);border-radius:50%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 calc(var(--w)*.17);gap:8px;text-align:center}
+.lbox h1{font-size:3rem;color:var(--head);line-height:1}.lbox .sub{font-family:cursive;color:var(--brown);font-size:1.3rem;margin-bottom:6px}
+.lbox input{width:100%;padding:9px 12px;border:1px solid var(--ln);border-radius:8px}
+#app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+nav{background:var(--navy);color:#fff;padding:18px 12px;position:sticky;top:0;height:100vh;overflow:auto}
+nav .brand{border-bottom:1px solid var(--gold);padding:0 6px 14px;margin-bottom:12px}
+nav .brand h2{font-size:2rem;color:var(--gold);line-height:1}nav .brand small{color:#cdd6e6}
+nav a{display:block;padding:9px 12px;border-radius:8px;color:#dfe6f3;cursor:pointer;text-decoration:none}
+nav a:hover{background:var(--navy2)}nav a.on{background:var(--gold);color:var(--navy);font-weight:700}
+nav .soon{opacity:.5;cursor:default}
+main{padding:24px;min-width:0}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+header.top h2{font-size:2.4rem;color:var(--head)}
+.btn{border:0;border-radius:8px;padding:8px 14px;cursor:pointer;background:var(--btn);color:#fff;font-weight:600}
+.btn.gold{background:var(--gold);color:var(--navy)}.btn.sec{background:var(--card);color:var(--head);border:1px solid var(--ln)}.btn.bad{background:var(--bad)}.btn.sm{padding:4px 10px;font-size:.85rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+.kpi{background:var(--card);border-left:5px solid var(--gold);padding:14px 16px;border-radius:6px}
+.kpi small{color:var(--mut)}.kpi b{display:block;font-size:1.7rem;color:var(--head)}
+.panel{background:var(--card);border-radius:8px;padding:6px;overflow:auto}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--ln);white-space:nowrap}
+th{color:var(--mut);font-weight:600;font-size:.9rem}tr:last-child td{border:0}
+.tag{background:var(--soft2);border-radius:20px;padding:2px 10px;font-size:.85rem}
+.bar{display:flex;gap:8px;margin-bottom:12px}.bar input{flex:1;padding:8px 12px;border:1px solid var(--ln);border-radius:8px}
+dialog{border:0;border-radius:12px;padding:0;width:min(560px,94vw);box-shadow:0 20px 60px #0005}
+dialog::backdrop{background:#0a1a2f99}
+.mh{background:var(--navy);color:var(--gold);padding:12px 18px}.mh h3{font-size:1.6rem}
+.mb{padding:16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:65vh;overflow:auto}
+.mb label{display:block;font-size:.85rem;color:var(--mut)}.mb .w{grid-column:1/-1}
+.mb input,.mb select,.mb textarea{width:100%;padding:8px 10px;border:1px solid var(--ln);border-radius:8px}
+.mf{padding:12px 18px;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--ln)}
+#toast{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;padding:10px 16px;border-radius:8px;border-left:5px solid var(--gold);opacity:0;transition:.25s;pointer-events:none}
+#toast.show{opacity:1}#toast.err{border-color:var(--bad)}
+@media(max-width:800px){#app{grid-template-columns:1fr}nav{position:static;height:auto;display:flex;flex-wrap:wrap;gap:4px}nav .brand{width:100%}.mb{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+input,select,textarea{background:var(--inp);color:var(--tx)}dialog{background:var(--card);color:var(--tx)}
+:root[data-theme=dark] nav{border-right:1px solid var(--ln)}:root[data-theme=dark] .leaflet-tile{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.9)}
+</style>
+</head>
+<body>
+
+<section id="login">
+  <form class="lbox" id="lform">
+    <h1>WIHD</h1><div class="sub">Milhas &amp; Viagens</div>
+    <input id="le" type="email" placeholder="E-mail" required autocomplete="username">
+    <input id="lp" type="password" placeholder="Senha" required autocomplete="current-password">
+    <button class="btn gold" style="width:100%">Entrar</button>
+  </form>
+</section>
+
+<div id="app" class="hide">
+  <nav>
+    <div class="brand"><h2>WIHD</h2><small>Milhas &amp; Viagens</small></div>
+    <div id="menu"></div>
+    <a onclick="tema()">◐ Alternar tema</a><a onclick="sair()" style="margin-top:14px;border-top:1px solid var(--navy2)">Sair</a>
+  </nav>
+  <main><header class="top"><h2 id="ttl"></h2><div id="acts"></div></header><div id="view"></div></main>
+</div>
+<dialog id="dlg"><div class="mh"><h3 id="dt"></h3></div><div class="mb" id="db"></div><div class="mf" id="df"></div></dialog>
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="milhas.js"></script>
+<script src="mapa.js"></script>
+<script src="whatsapp.js"></script>
+<script src="financeiro.js"></script>
+<script src="funil.js"></script>
+<script src="acompanhamentos.js"></script>
+<script src="vendas.js"></script>
+<script>
+function falha(msg) { document.body.innerHTML = '<div style="max-width:640px;margin:40px auto;font:16px/1.5 system-ui,sans-serif;background:#fff;color:#1b2433;padding:24px;border-top:6px solid #c9a13b;border-radius:10px"><h2 style="margin-top:0">Não foi possível iniciar o CRM</h2><p>' + msg + '</p></div>'; throw new Error(msg); }
+if (typeof SUPABASE_URL === 'undefined' || !/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(String(SUPABASE_URL).trim())) falha('A URL do Supabase no arquivo <b>config.js</b> está ausente ou inválida. A linha deve ficar assim, com aspas simples e sem mais nada: <code>const SUPABASE_URL = \'https://SEU-PROJETO.supabase.co\';</code>. Confira também se o arquivo <b>config.js</b> foi enviado ao GitHub, na mesma pasta do index.html.');
+const sb = supabase.createClient(String(SUPABASE_URL).trim(), String(SUPABASE_ANON_KEY).trim());
+(function () {
+  const modulos = {negocios: 'funil.js', viagens: 'acompanhamentos.js', vendas: 'vendas.js', mapa: 'mapa.js', whatsapp: 'whatsapp.js', milhas: 'milhas.js', financeiro: 'financeiro.js'};
+  const falta = Object.entries(modulos).filter(([k]) => !(window.EXTRA || {})[k]).map(([, f]) => f);
+  if (falta.length) document.body.insertAdjacentHTML('afterbegin', '<div style="background:#b3392f;color:#fff;padding:10px 16px;font:15px system-ui,sans-serif">Arquivos não encontrados no GitHub (ou com erro): <b>' + falta.join(', ') + '</b>. Envie todos os arquivos da pasta para o repositório, na mesma pasta do index.html.</div>');
+})();
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brl = v => Number(v || 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+const hojeISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+const dt = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('pt-BR') : '—';
+let me = null, clientes = [], cur = 'dashboard';
+
+function toast(m, err) { const t = $('toast'); t.textContent = m; t.className = 'show' + (err ? ' err' : ''); setTimeout(() => t.className = '', 3000); }
+
+const ETAPAS = ['Novo Lead','Qualificado','Proposta Enviada','Negociação','Fechado (Ganho)','Perdido'];
+const SERV = ['Emissão de Passagens','Consultoria de Milhas','Pacotes de Viagem','Hospedagem','Cruzeiros','Grupo Wpp','Seguro Viagem','Carro','Outro'];
+const CLI = {k:'cliente_id', l:'Cliente', t:'fk'};
+// Cada módulo: tabela, campos (k=coluna, l=rótulo, t=tipo), colunas da lista
+const ENT = {
+  clientes: {l:'Clientes', tb:'clientes', order:'nome', f:[{k:'nome',l:'Nome completo',w:1,req:1},{k:'email',l:'E-mail',t:'email'},{k:'telefone',l:'Telefone'},{k:'cpf',l:'CPF'},{k:'aniversario',l:'Aniversário',t:'date'},{k:'cidade_atual',l:'Cidade atual'},{k:'endereco',l:'Endereço',w:1},{k:'observacoes',l:'Observações',t:'area',w:1}], cols:['codigo','nome','email','telefone','cidade_atual']},
+  negocios: {l:'Pipeline', tb:'negocios', order:'criado_em', f:[CLI,{k:'titulo',l:'Título',req:1},{k:'servico',l:'Serviço',t:'sel',o:SERV},{k:'valor',l:'Valor (R$)',t:'number'},{k:'etapa',l:'Etapa',t:'sel',o:ETAPAS},{k:'probabilidade',l:'Probabilidade (%)',t:'number'},{k:'origem',l:'Origem do lead'},{k:'campanha',l:'Campanha'},{k:'descricao',l:'Descrição',t:'area',w:1}], cols:['titulo','cliente_id','servico','valor','etapa']},
+  vendas: {l:'Vendas', tb:'vendas', order:'data_venda', f:[CLI,{k:'data_venda',l:'Data',t:'date'},{k:'servico',l:'Serviço',t:'sel',o:SERV},{k:'destino',l:'Destino'},{k:'valor',l:'Valor (R$)',t:'number',req:1},{k:'comissao_pct',l:'Comissão (%)',t:'number'},{k:'forma_pagamento',l:'Pagamento'},{k:'observacoes',l:'Observações',t:'area',w:1}], cols:['data_venda','cliente_id','servico','destino','valor','comissao_pct']},
+  viagens: {l:'Acompanhamento', tb:'viagens', order:'data_ida', f:[CLI,{k:'tipo',l:'Tipo',t:'sel',o:['voo','hospedagem','transporte','cruzeiro','seguro']},{k:'destino',l:'Destino'},{k:'fornecedor',l:'Companhia / Hotel / Seguradora'},{k:'localizador',l:'Localizador'},{k:'status',l:'Status',t:'sel',o:['Pendente','Confirmado','Em andamento','Concluído','Cancelado']},{k:'data_ida',l:'Ida / Check-in',t:'date'},{k:'data_volta',l:'Volta / Check-out',t:'date'},{k:'checkin_feito',l:'Check-in feito',t:'sel',o:['false','true']},{k:'notas',l:'Notas',t:'area',w:1}], cols:['tipo','cliente_id','destino','fornecedor','data_ida','status','portal'], portal:1},
+  tarefas: {l:'Tarefas', tb:'tarefas', order:'prazo', f:[{k:'titulo',l:'Título',w:1,req:1},{k:'prioridade',l:'Prioridade',t:'sel',o:['alta','media','baixa']},{k:'status',l:'Status',t:'sel',o:['pendente','em_andamento','concluida']},{k:'prazo',l:'Prazo',t:'date'},CLI,{k:'descricao',l:'Descrição',t:'area',w:1}], cols:['titulo','prioridade','status','prazo','cliente_id']},
+  transacoes: {l:'Financeiro', tb:'transacoes', order:'data', roles:['admin','financeiro'], f:[{k:'tipo',l:'Tipo',t:'sel',o:['receita','despesa']},{k:'categoria',l:'Categoria'},{k:'descricao',l:'Descrição',w:1},{k:'valor',l:'Valor (R$)',t:'number',req:1},{k:'data',l:'Data',t:'date'},{k:'pago',l:'Pago',t:'sel',o:['false','true']}], cols:['data','tipo','categoria','descricao','valor','pago']}
+};
+const EXTRA = window.EXTRA || {};
+const MENU = ['dashboard','clientes','negocios','vendas','viagens','mapa','whatsapp','milhas','financeiro','tarefas','usuarios'];
+
+// ===== Auth =====
+$('lform').onsubmit = async e => {
+  e.preventDefault();
+  if (!CONFIG_OK) return toast('Falta colar a chave anon no arquivo config.js.', 1);
+  const {error} = await sb.auth.signInWithPassword({email:$('le').value.trim(), password:$('lp').value});
+  if (error) { const m = error.message || ''; return toast(/Invalid login/i.test(m) ? 'E-mail ou senha incorretos, ou o usuário ainda não foi criado no Supabase.' : /not confirmed/i.test(m) ? 'E-mail não confirmado no Supabase (marque Auto Confirm User).' : /api key/i.test(m) ? 'Chave anon inválida no config.js.' : 'Erro: ' + m, 1); }
+  boot();
+};
+function tema() { const d = document.documentElement, n = d.dataset.theme === 'dark' ? 'light' : 'dark'; d.dataset.theme = n; try { localStorage.setItem('wihd_tema', n); } catch (e) {} }
+async function sair() { await sb.auth.signOut(); location.reload(); }
+async function boot() {
+  const {data:{session}} = await sb.auth.getSession();
+  if (!session) return;
+  const {data:p} = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+  if (!p || !p.ativo) { await sb.auth.signOut(); return toast('Usuário sem acesso. Fale com o administrador.', 1); }
+  me = p; $('login').classList.add('hide'); $('app').classList.remove('hide');
+  $('menu').innerHTML = MENU.filter(m => m === 'dashboard' || (m === 'usuarios' ? me.role === 'admin' : !(ENT[m]?.roles) || ENT[m].roles.includes(me.role)))
+    .map(m => `<a data-m="${m}" onclick="go('${m}')">${m === 'dashboard' ? 'Dashboard' : m === 'usuarios' ? 'Colaboradores' : (EXTRA[m]?.l || ENT[m].l)}</a>`).join('');
+  await loadClientes(); go('dashboard');
+}
+async function loadClientes() { const {data} = await sb.from('clientes').select('id,nome').order('nome'); clientes = data || []; }
+const cn = id => clientes.find(c => c.id === id)?.nome || '—';
+
+// ===== Navegação =====
+function go(m) {
+  cur = m; document.querySelectorAll('nav a[data-m]').forEach(a => a.classList.toggle('on', a.dataset.m === m));
+  $('ttl').textContent = m === 'dashboard' ? 'Dashboard' : m === 'usuarios' ? 'Colaboradores' : (EXTRA[m]?.l || ENT[m].l);
+  $('acts').innerHTML = ENT[m] && !EXTRA[m] ? `<button class="btn gold" onclick="form('${m}')">+ Novo</button>` : '';
+  m === 'dashboard' ? dash() : m === 'usuarios' ? users() : EXTRA[m] ? EXTRA[m].run() : list(m);
+}
+
+async function dash() {
+  const hoje = hojeISO(), mes = hoje.slice(0, 7);
+  const [v, n, t, vi] = await Promise.all([sb.from('vendas').select('valor,comissao_pct,data_venda'), sb.from('negocios').select('etapa,valor'),
+    sb.from('tarefas').select('prazo,status'), sb.from('viagens').select('destino,data_ida,cliente_id,checkin_feito').gte('data_ida', hoje).order('data_ida').limit(8)]);
+  const V = v.data || [], N = n.data || [], T = t.data || [];
+  const vm = V.filter(x => (x.data_venda || '').startsWith(mes));
+  const soma = a => a.reduce((s, x) => s + Number(x.valor || 0), 0);
+  const com = a => a.reduce((s, x) => s + Number(x.valor || 0) * Number(x.comissao_pct || 0) / 100, 0);
+  const atras = T.filter(x => x.status !== 'concluida' && x.prazo && x.prazo < hoje).length;
+  $('view').innerHTML = `<div class="kpis">
+    <div class="kpi"><small>Vendas no mês</small><b>${brl(soma(vm))}</b></div>
+    <div class="kpi"><small>Comissões no mês</small><b>${brl(com(vm))}</b></div>
+    <div class="kpi"><small>Negócios em aberto</small><b>${N.filter(x => !['Aprovado','Perdido','Concluído','Recuperado'].includes(x.etapa)).length}</b></div>
+    <div class="kpi"><small>Clientes</small><b>${clientes.length}</b></div>
+    <div class="kpi"><small>Tarefas atrasadas</small><b style="color:${atras ? 'var(--bad)' : 'var(--ok)'}">${atras}</b></div></div>
+    <h3 style="font-size:1.6rem;margin-bottom:8px">Próximas viagens</h3><div class="panel"><table><tr><th>Cliente</th><th>Destino</th><th>Data</th><th>Check-in</th></tr>
+    ${(vi.data || []).map(x => `<tr><td>${esc(cn(x.cliente_id))}</td><td>${esc(x.destino)}</td><td>${dt(x.data_ida)}</td><td>${x.checkin_feito ? 'Feito' : 'Pendente'}</td></tr>`).join('') || '<tr><td colspan="4">Nenhuma viagem agendada.</td></tr>'}</table></div>`;
+}
+
+async function list(m) {
+  const E = ENT[m];
+  const {data, error} = await sb.from(E.tb).select('*').order(E.order, {ascending: m === 'clientes' || m === 'tarefas'});
+  if (error) return $(E.box || 'view').innerHTML = `<p>Erro ao carregar: ${esc(error.message)}</p>`;
+  window._rows = data;
+  const lab = c => c === 'cliente_id' ? 'Cliente' : c === 'portal' ? 'Portal' : (E.f.find(f => f.k === c)?.l || (c === 'codigo' ? 'Código' : c));
+  const cell = (r, c) => c === 'cliente_id' ? esc(cn(r[c])) : c === 'portal' ? `<button class="btn sm sec" onclick="portal('${r.portal_token}')">Copiar link</button>` :
+    /^(valor|valor_mensal|taxas|valor_mercado|limite|custo_milheiro)$/.test(c) ? brl(r[c]) : /^(saldo|milhas|milhas_mensais)$/.test(c) ? Number(r[c] || 0).toLocaleString('pt-BR') : /data|prazo|ida|renov/.test(c) ? dt(r[c]) : c === 'comissao_pct' ? r[c] + '%' : typeof r[c] === 'boolean' ? (r[c] ? 'Sim' : 'Não') : esc(r[c] ?? '—');
+  $(E.box || 'view').innerHTML = `<div class="bar"><input id="q" placeholder="Buscar…" oninput="filt()"></div><div class="panel"><table id="tb"><tr>${E.cols.map(c => `<th>${lab(c)}</th>`).join('')}<th></th></tr>
+    ${data.map(r => `<tr><td${''}>${E.cols.map(c => cell(r, c)).join('</td><td>')}</td><td><button class="btn sm sec" onclick="form('${m}','${r.id}')">Editar</button> ${me.role === 'admin' ? `<button class="btn sm bad" onclick="del('${m}','${r.id}')">Excluir</button>` : ''}</td></tr>`).join('') || '<tr><td>Nada cadastrado ainda. Clique em “+ Novo”.</td></tr>'}</table></div>`;
+}
+function filt() { const q = $('q').value.toLowerCase(); document.querySelectorAll('#tb tr:not(:first-child)').forEach(r => r.classList.toggle('hide', !r.textContent.toLowerCase().includes(q))); }
+function portal(t) { const u = location.origin + location.pathname.replace(/[^/]*$/, '') + 'portal.html?t=' + t; navigator.clipboard.writeText(u); toast('Link do portal copiado.'); }
+
+function form(m, id) {
+  const E = ENT[m], r = id ? window._rows.find(x => x.id === id) : {};
+  $('dt').textContent = (id ? 'Editar · ' : 'Novo · ') + E.l;
+  $('db').innerHTML = E.f.map(f => {
+    const v = r[f.k] ?? '', w = f.w || f.t === 'area' ? ' class="w"' : '';
+    let inp;
+    if (f.t === 'fk') inp = `<select id="f_${f.k}"><option value="">— Selecionar —</option>${clientes.map(c => `<option value="${c.id}" ${c.id === v ? 'selected' : ''}>${esc(c.nome)}</option>`).join('')}</select>`;
+    else if (f.t === 'sel') inp = `<select id="f_${f.k}">${f.o.map(o => `<option ${String(v) === o ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
+    else if (f.t === 'area') inp = `<textarea id="f_${f.k}" rows="2">${esc(v)}</textarea>`;
+    else inp = `<input id="f_${f.k}" type="${f.t || 'text'}" step="any" value="${esc(v)}">`;
+    return `<div${w}><label>${f.l}${f.req ? ' *' : ''}</label>${inp}</div>`;
+  }).join('');
+  $('df').innerHTML = `<button class="btn sec" onclick="dlg.close()">Cancelar</button><button class="btn gold" onclick="save('${m}','${id || ''}')">Salvar</button>`;
+  $('dlg').showModal();
+}
+async function save(m, id) {
+  const E = ENT[m], row = {};
+  for (const f of E.f) {
+    let v = $('f_' + f.k).value;
+    if (f.req && !v) return toast(`Preencha: ${f.l}`, 1);
+    if (f.t === 'number') v = v === '' ? null : Number(v);
+    else if (['true','false'].includes(v) && f.t === 'sel') v = v === 'true';
+    else if (v === '') v = null;
+    row[f.k] = v;
+  }
+  const q = id ? sb.from(E.tb).update(row).eq('id', id) : sb.from(E.tb).insert(row);
+  const {error} = await q;
+  if (error) return toast('Não foi possível salvar: ' + error.message, 1);
+  $('dlg').close(); toast('Salvo.'); if (m === 'clientes') await loadClientes(); list(m);
+}
+async function del(m, id) {
+  if (!confirm('Excluir este registro? Não dá para desfazer.')) return;
+  const {error} = await sb.from(ENT[m].tb).delete().eq('id', id);
+  if (error) return toast(error.message, 1);
+  toast('Excluído.'); if (m === 'clientes') await loadClientes(); list(m);
+}
+
+async function users() {
+  const {data} = await sb.from('profiles').select('*').order('criado_em');
+  $('view').innerHTML = `<p style="color:var(--mut)">Para adicionar um colaborador: Supabase › Authentication › Users › Add user. Depois ele aparece aqui e você define o perfil.</p>
+  <div class="panel"><table><tr><th>Nome</th><th>Perfil</th><th>Ativo</th></tr>${data.map(u => `<tr><td>${esc(u.nome)}</td>
+  <td><select onchange="setU('${u.id}',{role:this.value})">${['admin','vendedor','financeiro'].map(r => `<option ${u.role === r ? 'selected' : ''}>${r}</option>`).join('')}</select></td>
+  <td><select onchange="setU('${u.id}',{ativo:this.value==='true'})"><option value="true" ${u.ativo ? 'selected' : ''}>Sim</option><option value="false" ${!u.ativo ? 'selected' : ''}>Não</option></select></td></tr>`).join('')}</table></div>`;
+}
+async function setU(id, patch) { const {error} = await sb.from('profiles').update(patch).eq('id', id); toast(error ? error.message : 'Atualizado.', !!error); }
+
+boot();
+</script>
+</body>
+</html>

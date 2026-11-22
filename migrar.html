@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WIHD · Importar backup antigo</title>
+<style>
+body{margin:0;background:#e6eaf1;font:16px/1.5 'Source Sans 3',system-ui,sans-serif;color:#1b2433;padding:20px}
+.c{max-width:720px;margin:auto;background:#fff;border-top:6px solid #c9a13b;border-radius:10px;padding:24px}
+h1{margin:0 0 4px;color:#17304f}input,button{font:inherit;padding:8px 12px;border-radius:8px;border:1px solid #d5dbe6;margin:4px 0}
+button{background:#17304f;color:#fff;border:0;cursor:pointer;font-weight:600}button.g{background:#c9a13b;color:#17304f}button:disabled{opacity:.5}
+pre{background:#f6f8fb;padding:12px;border-radius:8px;white-space:pre-wrap;max-height:320px;overflow:auto}.hide{display:none}
+</style></head><body><div class="c">
+<h1>Importar backup do CRM antigo</h1><p>Use <b>uma vez</b>, com o sistema novo vazio. Entre com o usuário administrador.</p>
+<div id="s1"><input id="e" type="email" placeholder="E-mail"><br><input id="p" type="password" placeholder="Senha"><br><button onclick="entrar()">Entrar</button></div>
+<div id="s2" class="hide"><input id="f" type="file" accept=".json"><br><button onclick="ler()">1. Ler arquivo</button> <button class="g" id="go" onclick="importar()" disabled>2. Importar</button></div>
+<pre id="log">Aguardando…</pre></div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY), $ = id => document.getElementById(id);
+const log = t => { $('log').textContent += '\n' + t; }, uid = () => crypto.randomUUID(), D = d => /^\d{4}-\d{2}-\d{2}/.test(d || '') ? d.slice(0, 10) : null, N = v => v === '' || v == null ? null : v;
+let dados = null;
+const ETAPA = {'Lead / Contato Inicial': 'Novo Contato', 'Negócios Futuros': 'Novo Contato', 'Qualificação / Reunião': 'Em Cotação', 'Pendente Agenda': 'Em Cotação', 'Pendente Envio Proposta': 'Em Cotação',
+  'Proposta Enviada': 'Proposta Enviada', 'Fechado (Ganho)': 'Aprovado', 'Perdido': 'Perdido'};
+
+async function entrar() {
+  const {error} = await sb.auth.signInWithPassword({email: $('e').value, password: $('p').value});
+  if (error) return log('Login falhou: ' + error.message);
+  const {data: pf} = await sb.from('profiles').select('role').single();
+  if (pf?.role !== 'admin') return log('Somente administrador pode importar.');
+  $('s1').classList.add('hide'); $('s2').classList.remove('hide'); log('Login ok.');
+}
+async function ler() {
+  const f = $('f').files[0]; if (!f) return log('Escolha o arquivo .json do backup.');
+  try { dados = JSON.parse(await f.text()); } catch (e) { return log('Arquivo inválido.'); }
+  const m = dados.milhas || {};
+  log(`Encontrado: ${(dados.clientes || []).length} clientes, ${(dados.negocios || []).length} negócios, ${(dados.vendas || []).length} vendas, ${(dados.viagens || []).length} viagens, ${(dados.tarefas || []).length} tarefas, ${(m.programas || []).length} contas de milhas, ${(m.cartoes || []).length} cartões, ${(m.emissoes || []).length} emissões.`);
+  $('go').disabled = false;
+}
+async function ins(tb, arr) {
+  for (let i = 0; i < arr.length; i += 100) { const {error} = await sb.from(tb).insert(arr.slice(i, i + 100)); if (error) throw new Error(tb + ': ' + error.message); }
+  log(`✔ ${tb}: ${arr.length}`);
+}
+async function importar() {
+  $('go').disabled = true;
+  try {
+    const {count} = await sb.from('clientes').select('*', {count: 'exact', head: true});
+    if (count > 0 && !confirm(`O sistema novo já tem ${count} cliente(s). Importar mesmo assim vai duplicar. Continuar?`)) return log('Cancelado.');
+    const cm = {}, nm = {}, M = dados.milhas || {};
+    const cli = id => cm[id] || null;
+    await ins('clientes', (dados.clientes || []).map(c => { cm[c.id] = uid(); return {id: cm[c.id], nome: c.nome, email: N(c.email), telefone: N(c.telefone), cpf: N(c.cpf), aniversario: D(c.aniversario), endereco: N(c.endereco),
+      observacoes: [c.observacoes, c.notas, c.codigo ? 'Cód. anterior: ' + c.codigo : ''].filter(Boolean).join('\n') || null, criado_em: c.criadoEm || undefined}; }));
+    await ins('negocios', (dados.negocios || []).map(n => { nm[n.id] = uid(); return {id: nm[n.id], cliente_id: cli(n.clienteId), titulo: n.titulo || 'Sem título', servico: N(n.servico), valor: n.valor || 0, funil: 'Funil Comercial',
+      etapa: ETAPA[n.stage] || 'Novo Contato', probabilidade: n.probabilidade || 0, origem: N(n.origemLead), campanha: N(n.campanha), descricao: N(n.descricao), criado_em: n.criadoEm || undefined}; }));
+    await ins('vendas', (dados.vendas || []).map(v => ({id: uid(), cliente_id: cli(v.clienteId), negocio_id: nm[v.negocioId] || null, data_venda: D(v.criadoEm), servico: N(v.servico), tipo_venda: N(v.tipoVenda), valor: v.valorVenda || 0,
+      observacoes: [`[${v.tipoVenda || 'venda'}] ${v.titulo || ''}`.trim(), v.nomeTerceiro ? 'Terceiro: ' + v.nomeTerceiro : '', v.valorOriginal && v.valorOriginal !== v.valorVenda ? 'Valor original: ' + v.valorOriginal : ''].filter(Boolean).join(' · '), criado_em: v.criadoEm || undefined})));
+    await ins('viagens', (dados.viagens || []).map(v => ({cliente_id: cli(v.clienteId), tipo: 'voo', destino: N(v.destino), fornecedor: N(v.companhia), detalhe: N(v.numeroVoo), data_ida: D(v.dataIda), data_volta: D(v.dataVolta),
+      status: v.status === 'Concluída' ? 'Concluído' : (v.status || 'Pendente'), checkin_feito: !!v.checkinFeito, valor: v.valor || 0, notas: N(v.notas)})));
+    await ins('tarefas', (dados.tarefas || []).map(t => ({titulo: t.titulo, descricao: N(t.descricao), prioridade: t.prioridade || 'media', status: t.status || 'pendente', prazo: D(t.prazo), cliente_id: cli(t.cliente_id), negocio_id: nm[t.negocio_id] || null})));
+    await ins('milhas_contas', (M.programas || []).map(p => { const h = [...(p.historico || [])].sort((a, b) => (a.data || '').localeCompare(b.data || '')); return {cliente_id: cli(p.clienteId), programa: p.programa, saldo: h.length ? h[h.length - 1].saldo || 0 : 0,
+      observacoes: h.length ? 'Histórico importado: ' + h.map(x => `${x.data}: ${Number(x.saldo || 0).toLocaleString('pt-BR')}`).join(' | ') : null}; }));
+    await ins('milhas_cartoes', (M.cartoes || []).map(c => ({cliente_id: cli(c.clienteId), banco: N(c.banco), nome: N(c.nome), bandeira: N(c.bandeira), limite: c.limite || 0})));
+    // No sistema antigo a emissão usava milheiros (ex.: 52 = 52.000 milhas) e custo por milheiro
+    await ins('milhas_emissoes', (M.emissoes || []).map(e => ({cliente_id: cli(e.clienteId), programa: N(e.programa), data: D(e.data), localizador: N(e.localizador), origem: N(e.origem), destino: N(e.destino),
+      milhas: Math.round((e.milhasUtilizadas || 0) * 1000), taxas: e.taxas || 0, valor_mercado: e.valorMercado || 0, custo_milha: e.custoMilha ? e.custoMilha / 1000 : null, observacoes: N(e.observacoes)})));
+    log('\nIMPORTAÇÃO CONCLUÍDA. Pode fechar esta página e apagar o arquivo migrar.html do repositório.');
+  } catch (e) { log('\nERRO: ' + e.message + '\nO que já foi gravado permanece. Apague os registros no Supabase antes de tentar de novo.'); }
+}
+</script></body></html>
