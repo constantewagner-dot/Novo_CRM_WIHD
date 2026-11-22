@@ -1,5 +1,0 @@
-# Nunca suba dados reais de clientes
-backup*.json
-*.backup.json
-.DS_Store
-node_modules/
