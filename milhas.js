@@ -45,7 +45,7 @@
         (data || []).forEach(e => { const c = e.custo_milha ?? CPM; eco += Number(e.valor_mercado) - (Number(e.taxas) + Number(e.milhas) * c); mer += Number(e.valor_mercado); mi += Number(e.milhas); tx += Number(e.taxas); });
         info = `Economia total ${brl(eco)} · valor médio do milheiro ${mi ? brl((mer - tx) / mi * 1000) : '—'}`;
       }
-      b.innerHTML = `<div class="bar"><button class="btn gold" onclick="form('${tab}')">+ Novo</button><span style="align-self:center;color:var(--mut)">${info}</span></div><div id="lbox"></div>`;
+      b.innerHTML = `<div class="bar"><button class="btn gold" onclick="abrirForm('${tab}')">+ Novo</button><span style="align-self:center;color:var(--mut)">${info}</span></div><div id="lbox"></div>`;
       return list(tab);
     }
     if (tab === 'mov') return mov();

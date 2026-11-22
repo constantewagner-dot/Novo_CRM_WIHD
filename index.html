@@ -145,7 +145,7 @@ const cn = id => clientes.find(c => c.id === id)?.nome || '—';
 function go(m) {
   cur = m; document.querySelectorAll('nav a[data-m]').forEach(a => a.classList.toggle('on', a.dataset.m === m));
   $('ttl').textContent = m === 'dashboard' ? 'Dashboard' : m === 'usuarios' ? 'Colaboradores' : (EXTRA[m]?.l || ENT[m].l);
-  $('acts').innerHTML = ENT[m] && !EXTRA[m] ? `<button class="btn gold" onclick="form('${m}')">+ Novo</button>` : '';
+  $('acts').innerHTML = ENT[m] && !EXTRA[m] ? `<button class="btn gold" onclick="abrirForm('${m}')">+ Novo</button>` : '';
   m === 'dashboard' ? dash() : m === 'usuarios' ? users() : EXTRA[m] ? EXTRA[m].run() : list(m);
 }
 
@@ -177,12 +177,12 @@ async function list(m) {
   const cell = (r, c) => c === 'cliente_id' ? esc(cn(r[c])) : c === 'portal' ? `<button class="btn sm sec" onclick="portal('${r.portal_token}')">Copiar link</button>` :
     /^(valor|valor_mensal|taxas|valor_mercado|limite|custo_milheiro)$/.test(c) ? brl(r[c]) : /^(saldo|milhas|milhas_mensais)$/.test(c) ? Number(r[c] || 0).toLocaleString('pt-BR') : /data|prazo|ida|renov/.test(c) ? dt(r[c]) : c === 'comissao_pct' ? r[c] + '%' : typeof r[c] === 'boolean' ? (r[c] ? 'Sim' : 'Não') : esc(r[c] ?? '—');
   $(E.box || 'view').innerHTML = `<div class="bar"><input id="q" placeholder="Buscar…" oninput="filt()"></div><div class="panel"><table id="tb"><tr>${E.cols.map(c => `<th>${lab(c)}</th>`).join('')}<th></th></tr>
-    ${data.map(r => `<tr><td${''}>${E.cols.map(c => cell(r, c)).join('</td><td>')}</td><td><button class="btn sm sec" onclick="form('${m}','${r.id}')">Editar</button> ${me.role === 'admin' ? `<button class="btn sm bad" onclick="del('${m}','${r.id}')">Excluir</button>` : ''}</td></tr>`).join('') || '<tr><td>Nada cadastrado ainda. Clique em “+ Novo”.</td></tr>'}</table></div>`;
+    ${data.map(r => `<tr><td${''}>${E.cols.map(c => cell(r, c)).join('</td><td>')}</td><td><button class="btn sm sec" onclick="abrirForm('${m}','${r.id}')">Editar</button> ${me.role === 'admin' ? `<button class="btn sm bad" onclick="del('${m}','${r.id}')">Excluir</button>` : ''}</td></tr>`).join('') || '<tr><td>Nada cadastrado ainda. Clique em “+ Novo”.</td></tr>'}</table></div>`;
 }
 function filt() { const q = $('q').value.toLowerCase(); document.querySelectorAll('#tb tr:not(:first-child)').forEach(r => r.classList.toggle('hide', !r.textContent.toLowerCase().includes(q))); }
 function portal(t) { const u = location.origin + location.pathname.replace(/[^/]*$/, '') + 'portal.html?t=' + t; navigator.clipboard.writeText(u); toast('Link do portal copiado.'); }
 
-function form(m, id) {
+function abrirForm(m, id) {
   const E = ENT[m], r = id ? window._rows.find(x => x.id === id) : {};
   $('dt').textContent = (id ? 'Editar · ' : 'Novo · ') + E.l;
   $('db').innerHTML = E.f.map(f => {

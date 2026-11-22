@@ -30,7 +30,7 @@
     ENT.wa_modelos = {l: 'Modelos', tb: 'wa_modelos', order: 'titulo', box: 'lbox', f: [{k: 'titulo', l: 'Título', w: 1, req: 1}, {k: 'texto', l: 'Texto (use {nome} para o nome do cliente)', t: 'area', w: 1, req: 1}], cols: ['titulo', 'texto']};
     $('view').innerHTML = `<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn sm ${aba === 'conv' ? 'gold' : 'sec'}" onclick="Wa.aba('conv')">Conversas</button><button class="btn sm ${aba === 'mod' ? 'gold' : 'sec'}" onclick="Wa.aba('mod')">Modelos de mensagem</button></div><div id="wbox"></div>`;
     if (aba === 'mod') {
-      $('wbox').innerHTML = `<div class="bar"><button class="btn gold" onclick="form('wa_modelos')">+ Novo modelo</button></div><div id="lbox"></div>`;
+      $('wbox').innerHTML = `<div class="bar"><button class="btn gold" onclick="abrirForm('wa_modelos')">+ Novo modelo</button></div><div id="lbox"></div>`;
       return list('wa_modelos');
     }
     const [, m] = await Promise.all([loadConvs(), sb.from('wa_modelos').select('*').order('titulo')]);
