@@ -14,8 +14,8 @@
 h1,h2,h3{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.04em;margin:0}
 button,input,select,textarea{font:inherit}:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .hide{display:none!important}
-#login{min-height:100vh;display:grid;place-items:center;padding:20px}
-.lbox{background:var(--card);border:2px solid var(--gold);border-radius:50%;width:min(420px,92vw);aspect-ratio:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12%;gap:8px;text-align:center}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.lbox{--w:min(440px,92vw);width:var(--w);aspect-ratio:1;box-sizing:border-box;background:var(--card);border:2px solid var(--gold);border-radius:50%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 calc(var(--w)*.17);gap:8px;text-align:center}
 .lbox h1{font-size:3rem;color:var(--head);line-height:1}.lbox .sub{font-family:cursive;color:var(--brown);font-size:1.3rem;margin-bottom:6px}
 .lbox input{width:100%;padding:9px 12px;border:1px solid var(--ln);border-radius:8px}
 #app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
@@ -114,8 +114,8 @@ const MENU = ['dashboard','clientes','negocios','vendas','viagens','mapa','whats
 $('lform').onsubmit = async e => {
   e.preventDefault();
   if (!CONFIG_OK) return toast('Falta colar a chave anon no arquivo config.js.', 1);
-  const {error} = await sb.auth.signInWithPassword({email:$('le').value, password:$('lp').value});
-  if (error) return toast('E-mail ou senha incorretos.', 1);
+  const {error} = await sb.auth.signInWithPassword({email:$('le').value.trim(), password:$('lp').value});
+  if (error) { const m = error.message || ''; return toast(/Invalid login/i.test(m) ? 'E-mail ou senha incorretos, ou o usuário ainda não foi criado no Supabase.' : /not confirmed/i.test(m) ? 'E-mail não confirmado no Supabase (marque Auto Confirm User).' : /api key/i.test(m) ? 'Chave anon inválida no config.js.' : 'Erro: ' + m, 1); }
   boot();
 };
 function tema() { const d = document.documentElement, n = d.dataset.theme === 'dark' ? 'light' : 'dark'; d.dataset.theme = n; try { localStorage.setItem('wihd_tema', n); } catch (e) {} }
