@@ -85,12 +85,13 @@ input,select,textarea{background:var(--inp);color:var(--tx)}dialog{background:va
 <script src="funil.js"></script>
 <script src="acompanhamentos.js"></script>
 <script src="vendas.js"></script>
+<script src="orcamentos.js"></script>
 <script>
 function falha(msg) { document.body.innerHTML = '<div style="max-width:640px;margin:40px auto;font:16px/1.5 system-ui,sans-serif;background:#fff;color:#1b2433;padding:24px;border-top:6px solid #c9a13b;border-radius:10px"><h2 style="margin-top:0">Não foi possível iniciar o CRM</h2><p>' + msg + '</p></div>'; throw new Error(msg); }
 if (typeof SUPABASE_URL === 'undefined' || !/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(String(SUPABASE_URL).trim())) falha('A URL do Supabase no arquivo <b>config.js</b> está ausente ou inválida. A linha deve ficar assim, com aspas simples e sem mais nada: <code>const SUPABASE_URL = \'https://SEU-PROJETO.supabase.co\';</code>. Confira também se o arquivo <b>config.js</b> foi enviado ao GitHub, na mesma pasta do index.html.');
 const sb = supabase.createClient(String(SUPABASE_URL).trim(), String(SUPABASE_ANON_KEY).trim());
 (function () {
-  const modulos = {negocios: 'funil.js', viagens: 'acompanhamentos.js', vendas: 'vendas.js', mapa: 'mapa.js', whatsapp: 'whatsapp.js', milhas: 'milhas.js', financeiro: 'financeiro.js'};
+  const modulos = {negocios: 'funil.js', viagens: 'acompanhamentos.js', vendas: 'vendas.js', orcamentos: 'orcamentos.js', mapa: 'mapa.js', whatsapp: 'whatsapp.js', milhas: 'milhas.js', financeiro: 'financeiro.js'};
   const falta = Object.entries(modulos).filter(([k]) => !(window.EXTRA || {})[k]).map(([, f]) => f);
   if (falta.length) document.body.insertAdjacentHTML('afterbegin', '<div style="background:#b3392f;color:#fff;padding:10px 16px;font:15px system-ui,sans-serif">Arquivos não encontrados no GitHub (ou com erro): <b>' + falta.join(', ') + '</b>. Envie todos os arquivos da pasta para o repositório, na mesma pasta do index.html.</div>');
 })();
@@ -115,7 +116,7 @@ const ENT = {
   transacoes: {l:'Financeiro', tb:'transacoes', order:'data', roles:['admin','financeiro'], f:[{k:'tipo',l:'Tipo',t:'sel',o:['receita','despesa']},{k:'categoria',l:'Categoria'},{k:'descricao',l:'Descrição',w:1},{k:'valor',l:'Valor (R$)',t:'number',req:1},{k:'data',l:'Data',t:'date'},{k:'pago',l:'Pago',t:'sel',o:['false','true']}], cols:['data','tipo','categoria','descricao','valor','pago']}
 };
 const EXTRA = window.EXTRA || {};
-const MENU = ['dashboard','clientes','negocios','vendas','viagens','mapa','whatsapp','milhas','financeiro','tarefas','usuarios'];
+const MENU = ['dashboard','clientes','negocios','orcamentos','vendas','viagens','mapa','whatsapp','milhas','financeiro','tarefas','usuarios'];
 
 // ===== Auth =====
 $('lform').onsubmit = async e => {

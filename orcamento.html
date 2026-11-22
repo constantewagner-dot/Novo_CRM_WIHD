@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Orçamento de viagem</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#17304f;--gold:#c9a13b;--brown:#8a6234;--tx:#1f2a3b;--mut:#66728a;--ln:#dfe4ee;--bg:#fbfaf7}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 'Source Sans 3',system-ui,sans-serif}
+h1,h2{font-family:'Playfair Display',Georgia,serif;font-weight:700;color:var(--navy);margin:0}
+nav{position:sticky;top:0;z-index:5;background:#fffffff2;backdrop-filter:blur(6px);border-bottom:1px solid var(--ln);display:flex;justify-content:center;gap:28px;padding:14px 12px;flex-wrap:wrap}
+nav a{color:var(--navy);text-decoration:none;font-weight:600}nav a:hover{color:var(--gold)}
+.w{max-width:860px;margin:auto;padding:0 18px}.c{text-align:center}.cod{font:13px ui-monospace,Menlo,monospace;color:var(--mut);padding-top:18px}
+.logo{width:120px;height:120px;border-radius:50%;border:3px solid var(--gold);margin:18px auto 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff}
+.logo b{font-family:'Playfair Display',serif;font-size:2rem;color:var(--navy);line-height:1}.logo i{font:italic 600 .8rem Georgia,serif;color:var(--brown)}
+h1{font-size:clamp(2rem,6vw,3rem);line-height:1.1}.sub{color:var(--mut);margin:6px 0}
+.hero{height:340px;border-radius:18px;margin:22px 0 6px;background:linear-gradient(135deg,var(--navy),#2c5a8c 60%,var(--gold));background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#fff;font:700 clamp(2rem,8vw,3.6rem) 'Playfair Display',serif;letter-spacing:.06em}
+section{padding:46px 0 6px}section h2{font-size:2.2rem;text-align:center}section .sub{text-align:center;margin-bottom:18px}
+.card{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--mut);font-size:.92rem}.top b{letter-spacing:.1em;color:#2b3445;font-size:.85rem}
+.row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:10px}.hr{font:700 2rem 'Source Sans 3';color:var(--navy);line-height:1}.ap{font-weight:700;letter-spacing:.1em;color:var(--mut);font-size:.85rem;text-align:center}
+.mid{flex:1;text-align:center;color:var(--mut);font-size:.8rem;font-weight:700;letter-spacing:.1em;min-width:80px;border-bottom:2px dotted var(--ln);padding-bottom:6px}
+.dur{border-left:1px solid var(--ln);padding-left:16px}.dur small{display:block;font-size:.75rem;font-weight:700;letter-spacing:.1em;color:var(--mut)}.dur b{color:var(--navy)}
+.cia{border-left:1px solid var(--ln);padding-left:16px;font-weight:700;color:var(--navy)}
+.pax{border-top:1px solid var(--ln);padding:14px 0;margin-top:14px;color:var(--mut)}.pax b{color:var(--navy);margin-left:12px}
+.hot h3{margin:0 0 2px;font-size:1.3rem;color:var(--navy)}.hot img{width:100%;max-height:300px;object-fit:cover;border-radius:12px;margin-bottom:12px}
+.hot a{color:var(--navy)}.kv{display:flex;gap:30px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--ln)}.kv small{display:block;color:var(--mut)}
+.res{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--ln);flex-wrap:wrap}.res:last-child{border:0}.res small{color:var(--mut);font-weight:700;letter-spacing:.08em}
+.val .l{display:flex;justify-content:space-between;padding:6px 0;color:var(--mut)}.val .l b{color:var(--tx)}
+.fin{margin-top:10px;padding-top:12px;border-top:1px solid var(--ln)}.fin s{color:var(--mut)}.big{font:700 2.4rem 'Playfair Display',serif;color:var(--navy)}
+.off{display:inline-block;background:var(--gold);color:var(--navy);font-weight:700;border-radius:20px;padding:2px 12px;font-size:.85rem;margin-left:8px}.eco{color:#2e7d5b;font-weight:600}
+.btn{display:inline-block;background:var(--navy);color:#fff;text-decoration:none;border:0;border-radius:30px;padding:11px 22px;font:600 1rem 'Source Sans 3';cursor:pointer}.btn.o{background:#fff;color:var(--navy);border:1px solid var(--ln)}
+.ct{display:grid;grid-template-columns:1fr 1fr;gap:20px}@media(max-width:640px){.ct{grid-template-columns:1fr}.dur,.cia{border:0;padding:0}}
+.fl{position:fixed;bottom:16px;left:16px;right:16px;display:flex;justify-content:space-between;pointer-events:none;z-index:6}.fl .btn{pointer-events:auto;box-shadow:0 6px 20px #0003}
+footer{text-align:center;color:var(--mut);padding:36px 0 110px;border-top:1px solid var(--ln);margin-top:36px;font-size:.92rem}
+@media print{nav,.fl{display:none}.hero{height:240px}.card{break-inside:avoid}body{background:#fff}}
+</style></head><body>
+<div id="app" class="w c" style="padding-top:80px;color:#66728a">Carregando orçamento…</div>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const e = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brl = v => Number(v || 0).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+const SEM = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'], MES = ['jan.', 'fev.', 'mar.', 'abr.', 'mai.', 'jun.', 'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.'];
+const dataL = s => { if (!s) return ''; const d = new Date(s + 'T00:00:00'); return isNaN(d) ? e(s) : `${SEM[d.getDay()]}., ${d.getDate()} de ${MES[d.getMonth()]} ${String(d.getFullYear()).slice(2)}`; };
+const noites = (a, b) => a && b ? Math.max(0, Math.round((new Date(b + 'T00:00:00') - new Date(a + 'T00:00:00')) / 864e5)) : 0;
+const pax = d => { const a = +d.adultos || 1, c = +d.criancas || 0; return `${a} adulto${a > 1 ? 's' : ''}${c ? `, ${c} criança${c > 1 ? 's' : ''}` : ''}`; };
+const tipoL = t => ({ida: 'IDA', volta: 'VOLTA'}[t] || 'TRECHO');
+
+(async () => {
+  const app = document.getElementById('app'), t = new URLSearchParams(location.search).get('t');
+  if (typeof CONFIG_OK === 'undefined' || !t) return app.innerHTML = 'Link inválido.';
+  const {data: o, error} = await supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY).rpc('orcamento_publico', {t});
+  if (error || !o) return app.innerHTML = 'Orçamento não encontrado ou link expirado. Fale com a sua agência.';
+  const d = o.dados || {}, ag = d.agencia || {}, voos = d.voos || [], hots = d.hospedagens || [];
+  const soma = (+d.valor_voos || 0) + (+d.valor_hosp || 0) + (+d.valor_outros || 0), desc = +d.desconto || 0, fim = soma - desc, np = +d.parcelas || 1;
+  const tel = String(d.agente_tel || ag.telefone || '').replace(/\D/g, ''), wa = tel ? `https://wa.me/${tel.length <= 11 ? '55' + tel : tel}?text=${encodeURIComponent('Olá! Estou vendo o orçamento "' + o.titulo + '" (#' + o.codigo + ').')}` : '#';
+  const nm = ag.nome || 'WIHD Milhas e Viagens', rota = voos.length ? `${e(voos[0].origem)} ✈ ${e(voos[0].destino)}` : '';
+  document.title = `${o.titulo} · ${nm}`;
+  const voo = v => `<div class="card"><div class="top"><b>✈ ${tipoL(v.tipo)}</b><span>📅 ${dataL(v.data)} &nbsp; 👤 ${pax(d)}</span></div>
+    <div class="row"><div><div class="hr">${e(v.hora_saida)}</div><div class="ap">${e(v.origem)}</div></div><div class="mid">${e(v.escalas || 'DIRETO').toUpperCase()}</div><div><div class="hr">${e(v.hora_chegada)}</div><div class="ap">${e(v.destino)}</div></div>
+    ${v.duracao ? `<div class="dur"><small>DURAÇÃO</small><b>${e(v.duracao)}</b></div>` : ''}${v.companhia ? `<div class="cia">${e(v.companhia)}${v.numero_voo ? ` <small style="color:var(--mut);font-weight:400">· ${e(v.numero_voo)}</small>` : ''}</div>` : ''}</div></div>`;
+  const hot = h => { const q = encodeURIComponent((h.nome || '') + ' ' + (h.endereco || '')), n = noites(h.checkin, h.checkout);
+    return `<div class="card hot">${h.foto ? `<img src="${e(h.foto)}" alt="" onerror="this.remove()">` : ''}<h3>${e(h.nome)}</h3>${h.nota ? `<div style="color:var(--mut)">${e(h.nota)}</div>` : ''}${h.endereco ? `<div>📍 <a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">${e(h.endereco)}</a></div>` : ''}
+    <div class="kv">${h.checkin ? `<div><small>Check-in</small><b>${dataL(h.checkin)}</b></div>` : ''}${h.checkout ? `<div><small>Check-out</small><b>${dataL(h.checkout)}</b></div>` : ''}${n ? `<div><small>Noites</small><b>${n}</b></div>` : ''}<div><small>Quartos</small><b>${e(h.quartos || 1)}</b></div>${h.tipo_quarto ? `<div><small>Quarto</small><b>${e(h.tipo_quarto)}</b></div>` : ''}${h.regime ? `<div><small>Regime</small><b>${e(h.regime)}</b></div>` : ''}</div>
+    <div style="margin-top:12px"><a class="btn o" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">Ver no Google Maps</a></div></div>`; };
+  const L = (l, v) => v ? `<div class="l"><span>${l}</span><b>${brl(v)}</b></div>` : '';
+  app.className = ''; app.style.cssText = '';
+  app.innerHTML = `<nav>${voos.length ? '<a href="#voos">Voos</a>' : ''}${hots.length ? '<a href="#hospedagem">Hospedagem</a>' : ''}<a href="#resumo">Resumo</a><a href="#valores">Valores</a></nav>
+  <div class="w"><div class="cod">#${e(o.codigo)}</div>
+  <div class="c"><div class="logo"><b>WIHD</b><i>Milhas &amp; Viagens</i></div><h1>${e(o.titulo)}</h1><div class="sub" style="font-size:1.2rem">${e(d.cliente_nome || '')}</div><div class="sub">${pax(d)}</div></div>
+  <div class="hero" ${d.capa ? `style="background-image:url('${e(d.capa)}')"` : ''}>${d.capa ? '' : rota}</div>
+  ${voos.length ? `<section id="voos"><h2>Voos</h2><div class="sub">${pax(d)}</div>${voos.map(voo).join('')}<div class="pax">Passageiros <b>${pax(d)}</b></div></section>` : ''}
+  ${hots.length ? `<section id="hospedagem"><h2>Hospedagem</h2><div class="sub">${pax(d)}</div>${hots.map(hot).join('')}</section>` : ''}
+  <section id="resumo"><h2>Resumo</h2><div class="sub"></div><div class="card">${hots.map(h => `<div class="res"><div><small>HOSPEDAGEM</small><div style="font-weight:600">${e(h.nome)}</div><div style="color:var(--mut)">${dataL(h.checkin)}${h.checkout ? ' → ' + dataL(h.checkout) : ''}</div></div></div>`).join('')}
+  ${voos.map(v => `<div class="res"><div><b>${tipoL(v.tipo)}</b> &nbsp; ${e(v.hora_saida)} ${e(v.origem)} · ${e(v.escalas || 'Direto')} · ${e(v.destino)} ${e(v.hora_chegada)}</div><div style="color:var(--mut)">${dataL(v.data)}</div></div>`).join('')}</div></section>
+  <section id="valores"><h2>Valores</h2><div class="sub"></div><div class="card val">${L('Voos', d.valor_voos)}${L('Hospedagem', d.valor_hosp)}${L('Outros serviços', d.valor_outros)}
+  <div class="fin"><div style="display:flex;justify-content:space-between"><span style="font-weight:700;letter-spacing:.08em;color:var(--mut)">VALOR FINAL</span><b>${desc ? `<s>${brl(soma)}</s>` : brl(soma)}</b></div>
+  ${desc ? `<div class="eco" style="display:flex;justify-content:space-between;margin-top:6px"><span>Economia gerada${soma ? `<span class="off">${Math.round(desc / soma * 100)}% OFF</span>` : ''}</span><span>${brl(desc)}</span></div>` : ''}
+  <div class="big" style="margin-top:10px">${brl(fim)}</div><div style="font-weight:600">${np}x de ${brl(fim / np)} sem juros</div><small style="color:var(--mut)">*Valores sujeitos a alterações</small>
+  ${d.condicoes ? `<p style="margin:14px 0 0;color:var(--mut)">${e(d.condicoes)}</p>` : ''}</div></div>
+  <div class="card ct"><div><b style="font-size:1.1rem">${e(d.agente || nm)}</b>${tel ? `<div style="color:var(--mut)">${e(d.agente_tel || ag.telefone)}</div>` : ''}<div style="margin-top:12px"><a class="btn" href="${wa}" target="_blank" rel="noopener">Falar com a agência</a></div></div>
+  <div><b style="font-size:1.1rem">Informações de contato</b><div style="color:var(--mut);margin-top:6px">Para mais informações sobre sua cotação, entre em contato com seu agente de viagens.</div>${ag.email ? `<div style="margin-top:8px">✉ ${e(ag.email)}</div>` : ''}${ag.site ? `<div>🌐 ${e(ag.site)}</div>` : ''}${ag.cnpj ? `<div>CNPJ: ${e(ag.cnpj)}</div>` : ''}</div></div></section>
+  <footer>Cotação gerada por <b>${e(nm)}</b><br>Atualizada em ${new Date(o.atualizado_em).toLocaleDateString('pt-BR')} às ${new Date(o.atualizado_em).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})}</footer></div>
+  <div class="fl"><a class="btn o" href="${wa}" target="_blank" rel="noopener">Falar com a agência</a><button class="btn o" onclick="print()">Baixar PDF</button></div>`;
+})();
+</script></body></html>
