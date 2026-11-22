@@ -76,6 +76,7 @@ input,select,textarea{background:var(--inp);color:var(--tx)}dialog{background:va
 <div id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>function hojeISO() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }</script>
 <script src="config.js"></script>
 <script src="milhas.js"></script>
 <script src="mapa.js"></script>
@@ -96,11 +97,10 @@ const sb = supabase.createClient(String(SUPABASE_URL).trim(), String(SUPABASE_AN
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brl = v => Number(v || 0).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
-const hojeISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 const dt = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('pt-BR') : '—';
 let me = null, clientes = [], cur = 'dashboard';
 
-function toast(m, err) { const t = $('toast'); t.textContent = m; t.className = 'show' + (err ? ' err' : ''); setTimeout(() => t.className = '', 3000); }
+function toast(m, err) { const t = $('toast'); t.textContent = m; t.className = 'show' + (err ? ' err' : ''); setTimeout(() => t.className = '', err ? 8000 : 3000); }
 
 const ETAPAS = ['Novo Lead','Qualificado','Proposta Enviada','Negociação','Fechado (Ganho)','Perdido'];
 const SERV = ['Emissão de Passagens','Consultoria de Milhas','Pacotes de Viagem','Hospedagem','Cruzeiros','Grupo Wpp','Seguro Viagem','Carro','Outro'];
@@ -130,7 +130,8 @@ async function sair() { await sb.auth.signOut(); location.reload(); }
 async function boot() {
   const {data:{session}} = await sb.auth.getSession();
   if (!session) return;
-  const {data:p} = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+  const {data:p, error:pe} = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+  if (pe) { await sb.auth.signOut(); return toast('Não foi possível ler o perfil: ' + pe.message + (pe.code === '42501' ? ' (rode o script fase10_permissoes.sql no Supabase)' : ''), 1); }
   if (!p || !p.ativo) { await sb.auth.signOut(); return toast('Usuário sem acesso. Fale com o administrador.', 1); }
   me = p; $('login').classList.add('hide'); $('app').classList.remove('hide');
   $('menu').innerHTML = MENU.filter(m => m === 'dashboard' || (m === 'usuarios' ? me.role === 'admin' : !(ENT[m]?.roles) || ENT[m].roles.includes(me.role)))
